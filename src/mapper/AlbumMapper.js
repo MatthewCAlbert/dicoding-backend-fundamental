@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const AlbumMapper = ({
   id,
   name,
