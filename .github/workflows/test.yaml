@@ -10,7 +10,7 @@ on:
     paths-ignore: ["README.md"]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -37,7 +37,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
             
+    - name: Install
+      run: |
+        npm install
+            
     - name: Lint
       run: |
         npm run lint
-        
