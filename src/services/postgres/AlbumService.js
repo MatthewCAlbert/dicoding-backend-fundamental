@@ -11,7 +11,7 @@ class AlbumService {
   }
 
   async create({ name, year }) {
-    const id = nanoid(16);
+    const id = `album-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
@@ -45,14 +45,21 @@ class AlbumService {
       throw new NotFoundError('Album tidak ditemukan');
     }
 
+    const query2 = {
+      text: 'SELECT * FROM songs WHERE album_id = $1',
+      values: [id],
+    };
+    const result2 = await this._pool.query(query2);
+    result.rows[0].songs = result2?.rows;
+
     return result.rows.map(AlbumMapper)[0];
   }
 
-  async updateById(id, { title, body, tags }) {
+  async updateById(id, { name, year }) {
     const updatedAt = new Date().toISOString();
     const query = {
-      text: `UPDATE ${this.tableName} SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id`,
-      values: [title, body, tags, updatedAt, id],
+      text: `UPDATE ${this.tableName} SET name = $1, year = $2, updated_at = $3 WHERE id = $4 RETURNING id`,
+      values: [name, year, updatedAt, id],
     };
 
     const result = await this._pool.query(query);

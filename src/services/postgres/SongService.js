@@ -13,7 +13,7 @@ class SongService {
   async create({
     title, year, genre, performer, duration = 0, albumId = null,
   }) {
-    const id = nanoid(16);
+    const id = `song-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const updatedAt = createdAt;
 
@@ -31,12 +31,16 @@ class SongService {
     return result.rows[0].id;
   }
 
-  async getAll() {
-    const result = await this._pool.query(`SELECT * FROM ${this.tableName}`);
+  async getAll({ title = '', performer = '' }) {
+    const query = {
+      text: `SELECT id, title, performer FROM ${this.tableName} WHERE LOWER(title) LIKE $1 AND LOWER(performer) LIKE $2`,
+      values: [`%${title.toLowerCase()}%`, `%${performer.toLowerCase()}%`],
+    };
+    const result = await this._pool.query(query);
     return result.rows.map(SongMapper);
   }
 
-  async getById(id) {
+  async getOneById(id) {
     const query = {
       text: `SELECT * FROM ${this.tableName} WHERE id = $1`,
       values: [id],
@@ -50,11 +54,13 @@ class SongService {
     return result.rows.map(SongMapper)[0];
   }
 
-  async updateById(id, { title, body, tags }) {
+  async updateById(id, {
+    title, year, genre, performer, duration, albumId,
+  }) {
     const updatedAt = new Date().toISOString();
     const query = {
-      text: `UPDATE ${this.tableName} SET title = $1, body = $2, tags = $3, updated_at = $4 WHERE id = $5 RETURNING id`,
-      values: [title, body, tags, updatedAt, id],
+      text: `UPDATE ${this.tableName} SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, album_id = $6, updated_at = $7 WHERE id = $8 RETURNING id`,
+      values: [title, year, genre, performer, duration, albumId, updatedAt, id],
     };
 
     const result = await this._pool.query(query);

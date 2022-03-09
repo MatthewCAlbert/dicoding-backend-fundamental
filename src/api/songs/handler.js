@@ -1,4 +1,4 @@
-class AlbumsHandler {
+class SongsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
@@ -11,44 +11,60 @@ class AlbumsHandler {
   }
 
   async postHandler(request) {
-    this._validator.validateAlbumPayload(request.payload);
-    const { name, year } = request.payload;
+    this._validator.validateSongPayload(request.payload);
+    const {
+      title,
+      year,
+      genre,
+      performer,
+      duration,
+      albumId,
+    } = request.payload;
 
-    const albumId = await this._service.create({ name, year });
+    const songId = await this._service.create({
+      title,
+      year,
+      genre,
+      performer,
+      duration,
+      albumId,
+    });
 
     return {
       code: 201,
       status: 'success',
-      message: 'Album berhasil ditambahkan',
+      message: 'Musik berhasil ditambahkan',
       data: {
-        albumId,
+        songId,
       },
     };
   }
 
-  async getAllHandler() {
-    const albums = await this._service.getAll();
+  async getAllHandler(request) {
+    this._validator.validateSongQuery(request.query);
+
+    const songs = await this._service.getAll(request.query);
     return {
       status: 'success',
       data: {
-        albums,
+        songs,
       },
     };
   }
 
   async getByIdHandler(request) {
     const { id } = request.params;
-    const album = await this._service.getOneById(id);
+    const song = await this._service.getOneById(id);
     return {
       status: 'success',
       data: {
-        album,
+        song,
       },
     };
   }
 
   async putByIdHandler(request) {
-    this._validator.validateAlbumPayload(request.payload);
+    this._validator.validateSongPayload(request.payload);
     const { id } = request.params;
 
     await this._service.getOneById(id);
@@ -56,7 +72,7 @@ class AlbumsHandler {
 
     return {
       status: 'success',
-      message: 'Album berhasil diperbarui',
+      message: 'Musik berhasil diperbarui',
     };
   }
 
@@ -68,9 +84,9 @@ class AlbumsHandler {
 
     return {
       status: 'success',
-      message: 'Album berhasil dihapus',
+      message: 'Musik berhasil dihapus',
     };
   }
 }
 
-module.exports = AlbumsHandler;
+module.exports = SongsHandler;

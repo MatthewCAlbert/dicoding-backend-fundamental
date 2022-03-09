@@ -1,30 +1,30 @@
 const { routeHandlerMapper } = require('../../utils/ApiHandler');
 
-const routes = (notesHandler) => [
+const routes = (albumsHandler) => [
   {
     method: 'POST',
     path: '/albums',
-    handler: notesHandler.postNoteHandler,
+    handler: albumsHandler.postHandler,
   },
   {
     method: 'GET',
     path: '/albums',
-    handler: notesHandler.getNotesHandler,
+    handler: albumsHandler.getAllHandler,
   },
   {
     method: 'GET',
     path: '/albums/{id}',
-    handler: notesHandler.getNoteByIdHandler,
+    handler: albumsHandler.getByIdHandler,
   },
   {
     method: 'PUT',
     path: '/albums/{id}',
-    handler: notesHandler.putNoteByIdHandler,
+    handler: albumsHandler.putByIdHandler,
   },
   {
     method: 'DELETE',
     path: '/albums/{id}',
-    handler: notesHandler.deleteNoteByIdHandler,
+    handler: albumsHandler.deleteByIdHandler,
   },
 ].map(routeHandlerMapper);
 

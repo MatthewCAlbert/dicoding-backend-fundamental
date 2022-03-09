@@ -6,7 +6,12 @@ const SongPayloadSchema = Joi.object({
   genre: Joi.string().required(),
   performer: Joi.string().required(),
   duration: Joi.number(),
-  albumId: Joi.string().length(16),
+  albumId: Joi.string().length(22).default(null).allow(null),
 }).options({ stripUnknown: true });
 
-module.exports = { SongPayloadSchema };
+const SongQuerySchema = Joi.object({
+  title: Joi.string().default(''),
+  performer: Joi.string().default(''),
+}).options({ stripUnknown: true });
+
+module.exports = { SongPayloadSchema, SongQuerySchema };
