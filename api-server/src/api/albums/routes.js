@@ -17,7 +17,7 @@ const routes = (albumsHandler) => [
     path: '/albums/covers/{param*}',
     handler: {
       directory: {
-        path: path.resolve(__dirname, 'file'),
+        path: path.resolve(__dirname, 'file', 'images'),
       },
     },
   },
@@ -28,7 +28,9 @@ const routes = (albumsHandler) => [
     options: {
       payload: {
         allow: 'multipart/form-data',
+        parse: true,
         multipart: true,
+        maxBytes: 512000,
         output: 'stream',
       },
     },

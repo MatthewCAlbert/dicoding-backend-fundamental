@@ -1,2 +1,4 @@
 **/node_modules
+**/file/images/*
+!**/file/images/.gitkeep
 .env

@@ -27,6 +27,7 @@ class MailSender {
     const {
       subject, text, attachments,
     } = data;
+    console.info('Sending email..');
     const message = {
       from: {
         name: 'OpenMusic App',

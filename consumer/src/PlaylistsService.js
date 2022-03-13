@@ -17,6 +17,7 @@ const PlaylistMapper = ({
 class PlaylistsService {
   constructor() {
     this._pool = new Pool();
+    this.tableName = 'playlists';
   }
 
   async getOneById(id) {

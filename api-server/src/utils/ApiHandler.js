@@ -13,13 +13,20 @@ const ClientError = require('../exceptions/ClientError');
  * @returns {function}
  */
 const baseHandlerWrapper = (handler) => {
+  if (typeof handler !== 'function') {
+    return handler;
+  }
+
   const fn = async (request, h) => {
     try {
       const result = await handler(request);
-      const { code = 200, ...props } = result || {};
+      const { code = 200, headers = {}, ...props } = result || {};
       const response = h.response({
         status: 'success',
         ...props,
+      });
+      Object.keys(headers).forEach((headerKey) => {
+        response.header(headerKey, headers[headerKey]);
       });
       response.code(code);
       return response;

@@ -83,10 +83,15 @@ class AlbumsHandler {
   async getLikeByIdHandler(request) {
     const { id } = request.params;
 
-    const likes = await this._userAlbumLikesService.getCountByAlbumId(id);
+    const { cached, count: likes } = await this._userAlbumLikesService.getCountByAlbumId(id);
 
     return {
       status: 'success',
+      ...(cached ? {
+        headers: {
+          'X-Data-Source': 'cache',
+        },
+      } : {}),
       data: {
         likes,
       },
@@ -97,6 +102,7 @@ class AlbumsHandler {
     const { id } = request.params;
     const { id: credentialId } = request.auth.credentials;
 
+    await this._service.getOneById(id);
     const exist = await this._userAlbumLikesService.isExistsByUserAndAlbumId({
       userId: credentialId, albumId: id,
     });
@@ -106,6 +112,7 @@ class AlbumsHandler {
         userId: credentialId, albumId: id,
       });
       return {
+        code: 201,
         status: 'success',
         message: 'Album berhasil disukai',
       };
@@ -115,6 +122,7 @@ class AlbumsHandler {
       userId: credentialId, albumId: id,
     });
     return {
+      code: 201,
       status: 'success',
       message: 'Album berhasil batal disukai',
     };
@@ -126,8 +134,9 @@ class AlbumsHandler {
     const { cover } = request.payload;
     this._validator.validateImageHeaders(cover.hapi.headers);
 
-    const fileLocation = await this._storageService.writeFile(cover, cover.hapi);
-    await this._service.updateCoverById(id, fileLocation);
+    const filename = await this._storageService.writeFile(cover, cover.hapi);
+    const url = `http://${process.env.HOST}:${process.env.PORT}/albums/covers/${filename}`;
+    await this._service.updateCoverById(id, url);
 
     return {
       code: 201,

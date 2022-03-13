@@ -4,13 +4,13 @@ const AlbumMapper = ({
   id,
   name,
   year,
-  coverUrl,
+  cover,
   songs = null,
 }) => ({
   id,
   name,
   year,
-  coverUrl: coverUrl || null,
+  coverUrl: cover || null,
   ...(songs && ({
     songs: songs?.map(({ id: songId, title, performer }) => (
       { id: songId, title, performer }

@@ -46,7 +46,10 @@ class UserAlbumLikesService {
   async getCountByAlbumId(albumId) {
     try {
       const result = await this._cacheService.get(`${this.tableName}:${albumId}`);
-      return result;
+      return {
+        cached: true,
+        count: parseInt(result, 10),
+      };
     } catch (error) {
       const query = {
         text: `SELECT id FROM ${this.tableName} WHERE album_id = $1`,
@@ -57,7 +60,10 @@ class UserAlbumLikesService {
 
       await this._cacheService.set(`${this.tableName}:${albumId}`, count);
 
-      return count;
+      return {
+        cached: false,
+        count,
+      };
     }
   }
 

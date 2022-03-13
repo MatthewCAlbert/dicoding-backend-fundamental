@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-prod": "NODE_ENV=production node ./src/consumer.js",
-    "start-dev": "nodemon ./src/consumer.js",
+    "start": "NODE_ENV=production node ./src/consumer.js",
     "lint": "eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -3,6 +3,7 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
+const path = require('path');
 
 // albums
 const albums = require('./api/albums');
@@ -61,7 +62,7 @@ const init = async () => {
   const playlistsService = new PlaylistsService(collaborationsService);
   const playlistSongsService = new PlaylistSongsService();
   const playlistSongActivitiesService = new PlaylistSongActivitiesService();
-  const storageService = new StorageService();
+  const storageService = new StorageService(path.resolve(__dirname, 'api/albums/file/images'));
   const userAlbumLikesService = new UserAlbumLikesService(cacheService);
 
   const server = Hapi.server({
@@ -158,7 +159,10 @@ const init = async () => {
     {
       plugin: _exports,
       options: {
-        service: ProducerService,
+        services: {
+          producerService: ProducerService,
+          playlistsService,
+        },
         validator: ExportsValidator,
       },
     },
