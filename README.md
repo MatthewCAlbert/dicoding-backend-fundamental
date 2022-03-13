@@ -2,6 +2,10 @@
 
 By Matthew Christopher Albert
 
+## Project Directory
+- `api-server` -> Main HAPI API server and producer
+- `consumer` -> Consumer to send mail containing exported playlist
+
 ## Submissions
 
 - Submission 1: March 9, 2022

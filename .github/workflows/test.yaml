@@ -46,7 +46,7 @@ jobs:
             
     - name: Lint
       run: |
-        cd ../api-server
+        cd api-server
         npm run lint
         cd ../consumer
         npm run lint
