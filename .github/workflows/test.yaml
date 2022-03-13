@@ -39,8 +39,14 @@ jobs:
             
     - name: Install
       run: |
+        cd api-server
+        npm install
+        cd ../consumer
         npm install
             
     - name: Lint
       run: |
+        cd ../api-server
+        npm run lint
+        cd ../consumer
         npm run lint
